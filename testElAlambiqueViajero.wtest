@@ -1,0 +1,96 @@
+import luke.*
+import lugares.*
+import vehiculos.*
+import arsenal.*
+describe "tests de Luke y Lugares"{
+    test "Luke cambia su vehiculo a antigualla blinadada que no viaja a paris y no modifica la cantidad de viajes realizados" {
+      luke.cambiarVehiculo(antiguallaBlindada)
+      luke.viajar(paris)
+      assert.equals(0, luke.cantidadViajes())
+    }
+
+    test "Luke comienza con alambique e incrementa su contador de viajes correctamente cuando viaja a un destino permitido."{
+        luke.viajar(paris)
+        assert.equals(1, luke.cantidadViajes())
+    }
+
+    test "Luke guarda el recuerdo correspondiente al último destino visitado"{
+        luke.viajar(paris)
+        assert.equals("Torre Eiffel", luke.ultimoRecuerdo())
+    }
+
+    test "Luke viaja a Las vegas que homenajea a Rio de Janeiro, quedandose con su recuerdo"{
+        lasVegas.homenajear(rioDeJaneiro)
+        luke.viajar(lasVegas)
+        assert.equals("Cristo Redentor", luke.ultimoRecuerdo())
+    }
+}
+
+describe "tests de Vehiculos"{
+    test "Alambique hace un viaje y sigue teniendo combustible" {
+      alambique.viajar()
+      assert.that(alambique.tieneCombustible())
+    }
+
+    test "Alambique hace 10 viajes y no le queda combustible"{
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        alambique.viajar()
+        assert.notThat(alambique.tieneCombustible())
+    }
+
+    test "El combustible de Super Chatarra Especial depende del tipo de arsenal que lleva"{
+        superChatarraEspecial.cambiarArsenal(caniones)
+        assert.equals(caniones.disparos(), superChatarraEspecial.combustible())
+        superChatarraEspecial.cambiarArsenal(municion)
+        assert.equals(municion.disparos(), superChatarraEspecial.combustible())
+    }
+
+    test "Super chatarra especial consume disparos al viajar" {
+      superChatarraEspecial.cambiarArsenal(caniones)
+      assert.equals(10, caniones.disparos())
+      superChatarraEspecial.viajar()
+      assert.equals(8, caniones.disparos())
+    }
+
+    test "Antigualla Blindada tiene combustible si posee mas de 6 gansters (es peligroso)"{
+        assert.that(antiguallaBlindada.esPeligroso())
+    }
+
+    test "Antigualla Blindada pierde un ganster cuando viaja y deja de ser peligroso."{
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        assert.notThat(antiguallaBlindada.esPeligroso())
+    }
+
+    test "Antigualla Blindada arranca con 10 gansters y se vuelve rapido cuando pierde 8"{
+        assert.notThat(antiguallaBlindada.esRapido())
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        antiguallaBlindada.viajar()
+        assert.that(antiguallaBlindada.esRapido())
+    }
+
+    test "Super Convertible se transforma en alambique y se vuelve rapido" {
+        superConvertible.transformar(alambique)
+        assert.that(superConvertible.esRapido())
+    }
+    test "Super Convertible se transforma en Antigualla Blindada y no puede viajar a Paris"{
+        superConvertible.transformar(antiguallaBlindada)
+        assert.notThat(superConvertible.puedeViajar(paris))
+    }
+}
